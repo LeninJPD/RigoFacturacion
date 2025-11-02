@@ -1,0 +1,17 @@
+$sql="select 
+c.nombre_clie as sucursal, sum(v.total_ven) as total ,
+(select sum(monto_ganado) from venta_art where venta_art.secuencia in (select vv.secuencia from venta vv, cliente cc where
+vv.total_ven>0 and 
+vv.codigo_cli=cc.codigo_cli and 
+vv.fecha_venta BETWEEN '".$fecha."' and '".$fecha2."'
+group by  cc.codigo_cli, vv.secuencia )) as sacado,
+sum(v.total_ven)-(select sum(monto_ganado) from venta_art where venta_art.secuencia in (select vv.secuencia from venta vv, cliente cc where
+vv.total_ven>0 and 
+vv.codigo_cli=cc.codigo_cli and 
+vv.fecha_venta BETWEEN '".$fecha."' and '".$fecha2."'
+group by  cc.codigo_cli, vv.secuencia )) as beneficios
+from 
+facturacion.venta v,  cxc.cliente c
+where 
+v.total_ven>0 and 
+v.codigo_cli=c.codigo_cli  ";

@@ -1,0 +1,41 @@
+<?php
+// 1️⃣ Conectarse a PostgreSQL
+$conexion = pg_connect("host=localhost dbname=tu_base user=tu_usuario password=tu_contraseña");
+
+if (!$conexion) {
+    die("❌ Error de conexión a PostgreSQL.");
+}
+
+try {
+    // 2️⃣ Iniciar la transacción
+    pg_query($conexion, "BEGIN");
+
+    // 3️⃣ Ejecutar tus consultas SQL (por ejemplo, insertar un cobro)
+    $sql1 = "INSERT INTO cobro (id_cuota, monto_pagado, fecha_pago) VALUES ($1, $2, NOW())";
+    $ok1 = pg_query_params($conexion, $sql1, [5, 300]);
+
+    if (!$ok1) {
+        throw new Exception("Error al insertar el cobro");
+    }
+
+    // Otra consulta de ejemplo
+    $sql2 = "UPDATE cuota SET saldo = saldo - $1 WHERE id_cuota = $2";
+    $ok2 = pg_query_params($conexion, $sql2, [300, 5]);
+
+    if (!$ok2) {
+        throw new Exception("Error al actualizar el saldo de la cuota");
+    }
+
+    // 4️⃣ Si todo salió bien, confirmar los cambios
+    pg_query($conexion, "COMMIT");
+    echo "✅ Transacción completada correctamente.";
+
+} catch (Exception $e) {
+    // 5️⃣ Si ocurre un error, deshacer todo
+    pg_query($conexion, "ROLLBACK");
+    echo "❌ Error en la transacción: " . $e->getMessage();
+}
+
+// 6️⃣ Cerrar la conexión
+pg_close($conexion);
+?>

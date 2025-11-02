@@ -1,0 +1,153 @@
+declare
+ numerocomprobante character(100);
+ nombrecliente character(100);
+rnccliente character(100);
+ raiz character(100);
+valoractual integer;
+valorfinal integer;
+maximo integer;
+begin
+  select nombre_clie,rnc into nombrecliente,rnccliente  from cxc.cliente where cliente.codigo_cli=new.codigo_cli; 
+ if new.total_ven<=0 then
+   if (new.codigo_tipo_ven<>1)  then
+     
+	
+	update cxc.cliente set balance=(select sum(saldo_ven) from facturacion.venta where codigo_cli=new.codigo_cli and saldo_ven>0 and codigo_tipo_ven=2) where codigo_cli=new.codigo_cli; 	      
+
+
+    end if;  
+     /* update cxc.cobros set monto_cob=0 where codigo_ven=new.codigo_ven and monto_cob<>0;*/
+       update facturacion.venta_art set cantidad_art=0 where secuencia=new.secuencia and cantidad_art<>0; 
+       
+ end if;
+
+
+   /* reducir comprobante fiscal */
+maximo=0;
+   /* reducir comprobante fiscal */
+if  ((old.total_ven<=0) and (new.total_ven>0))  /*or ((old.total_ven>0) and (new.total_ven>0) and (old.tipo_ncf <> new.tipo_ncf))*/  then
+       select max(numero_factura) into maximo from venta where total_ven>0 and venta.secuencia<>new.secuencia;
+       if (maximo=null) or (maximo is null) then
+          maximo=1000;
+         else
+           maximo=maximo+1;
+       end if;
+
+  update facturacion.venta set numero_factura=maximo  where venta.secuencia=new.secuencia;
+ /* if new.codigo_cli=1 then
+        update facturacion.venta set numero_factura=maximo  where venta.secuencia=new.secuencia; 
+     else
+        update facturacion.venta set numero_factura=maximo,rnc_nuevo=rnccliente,nombre_cliente_nuevo=nombrecliente  where venta.secuencia=new.secuencia;
+  end if; */
+
+end if ;
+
+if  ((old.total_ven<=0) and (new.total_ven>0))  or ((old.total_ven>0) and (new.total_ven>0) and (old.tipo_ncf <> new.tipo_ncf)) then
+     
+            IF new.tipo_ncf = 'Factura de Crédito Fiscal' THEN
+               select raiz_valor_fiscal,inicio_valor_fiscal,fin_valor_fiscal into raiz,valoractual,valorfinal from empresa where codigo=1; 	
+                numerocomprobante=RTRIM(raiz,' ')||LTRIM(to_char(valoractual,'00000000'),' ');  
+             if valoractual<=valorfinal then
+                update facturacion.venta set ncf= numerocomprobante where venta.secuencia=new.secuencia;          
+                update empresa set inicio_valor_fiscal=inicio_valor_fiscal+1 where codigo=1;
+               else
+                 update facturacion.venta set ncf= '', tipo_ncf='' where venta.secuencia=new.secuencia; 
+             end if;
+
+            end if;     
+            IF new.tipo_ncf = 'Factura de Comprobante Gubernamental' THEN
+               select raiz_gobienro,inicio_gobierno,fin_gobierno into raiz,valoractual,valorfinal from empresa where codigo=1;  	
+                numerocomprobante=RTRIM(raiz,' ')||LTRIM(to_char(valoractual,'00000000'),' ');    
+              if valoractual<=valorfinal then
+                update facturacion.venta set ncf= numerocomprobante  where venta.secuencia=new.secuencia;          
+                update public.empresa set inicio_gobierno=inicio_gobierno+1 where codigo=1;
+              else
+                 update facturacion.venta set ncf= '', tipo_ncf='' where venta.secuencia=new.secuencia; 
+              end if;
+            end if;
+            IF new.tipo_ncf = 'Factura de Consumo'  THEN 
+                  select raiz_consumidorfinal,inicio_consumidorfinal,fin_consumidor_final into raiz,valoractual,valorfinal from empresa where codigo=1;  	
+                numerocomprobante=RTRIM(raiz,' ')||LTRIM(to_char(valoractual,'00000000'),' ');    
+              if valoractual<=valorfinal then
+                update facturacion.venta set ncf= numerocomprobante where venta.secuencia=new.secuencia;   
+                update public.empresa set inicio_consumidorfinal=inicio_consumidorfinal+1 where codigo=1; 
+               else
+                 update facturacion.venta set ncf= '', tipo_ncf='' where venta.secuencia=new.secuencia; 
+              end if;  
+
+            end if;
+
+              IF new.tipo_ncf = 'Registro Unico Ingreso'  THEN 
+             
+                  select raiz_registrounicoingreso,inicio_registrounicoingreso,fin_registrounicoingreso into raiz,valoractual,valorfinal from empresa where codigo=1;  	
+                numerocomprobante=RTRIM(raiz,' ')||LTRIM(to_char(valoractual,'00000000'),' '); 
+               if valoractual<=valorfinal then   
+                update facturacion.venta set ncf= numerocomprobante where venta.secuencia=new.secuencia;   
+                update public.empresa set inicio_registrounicoingreso=inicio_registrounicoingreso+1 where codigo=1; 
+                  else
+                 update facturacion.venta set ncf= '', tipo_ncf='' where venta.secuencia=new.secuencia; 
+              end if;
+            end if;
+
+
+
+             IF new.tipo_ncf = 'Especial Tribulación'  THEN 
+             
+                  select raiz_pecial_tribulacion,inicio_especial,fin_especial into raiz,valoractual,valorfinal from empresa where codigo=1;  	
+                numerocomprobante=RTRIM(raiz,' ')||LTRIM(to_char(valoractual,'00000000'),' '); 
+               if valoractual<=valorfinal then   
+                update facturacion.venta set ncf= numerocomprobante where venta.secuencia=new.secuencia;   
+                update public.empresa set inicio_especial=inicio_especial+1 where codigo=1; 
+                  else
+                 update facturacion.venta set ncf= '', tipo_ncf='' where venta.secuencia=new.secuencia; 
+              end if;
+            end if;
+
+            /*
+
+                 IF new.tipo_ncf = 'NOTA DE CREDITO'  THEN 
+                  select rai_notacredito,inicio_notacredito into raiz,valoractual from empresa;  	
+                numerocomprobante=RTRIM(raiz,' ')||LTRIM(to_char(valoractual,'00000000'),' ');
+               if valoractual<=valorfinal then    
+                update facturacion.venta set ncf= numerocomprobante where venta.secuencia=new.secuencia;   
+                update public.empresa set inicio_notacredito=inicio_notacredito+1 ;
+               else
+                 update facturacion.venta set ncf= '', tipo_ncf='' where venta.secuencia=new.secuencia; 
+              end if; 
+                end if;
+
+           */
+
+              IF new.tipo_ncf = 'Combustible al por Mayor'  THEN 
+                  select raiz_combustiblepormayor,inicio_combustiblepormayor,fin_combustiblepormayor into raiz,valoractual,valorfinal from empresa where codigo=1;  	
+                numerocomprobante=RTRIM(raiz,' ')||LTRIM(to_char(valoractual,'00000000'),' ');  
+               if valoractual<=valorfinal then  
+                update facturacion.venta set ncf= numerocomprobante where venta.secuencia=new.secuencia;   
+                update public.empresa set inicio_combustiblepormayor=inicio_combustiblepormayor+1 where codigo=1; 
+                  else
+                 update facturacion.venta set ncf= '', tipo_ncf='' where venta.secuencia=new.secuencia; 
+              end if;
+            end if;
+             /*  IF new.tipo_ncf = 'GASTOS MENOSRES'  THEN 
+                  select raiz_gastosmenores,incio_gastosmenosres into raiz,valoractual,valorfinal from empresa;  	
+                numerocomprobante=RTRIM(raiz,' ')||LTRIM(to_char(valoractual,'00000000'),' ');    
+             if valoractual<=valorfinal then
+                update facturacion.venta set ncf= numerocomprobante where venta.secuencia=new.secuencia;   
+                update public.empresa set incio_gastosmenosres=incio_gastosmenosres+1 ; 
+              else
+                 update facturacion.venta set ncf= '', tipo_ncf='' where venta.secuencia=new.secuencia; 
+              end if;
+            end if;*/
+
+
+end if;		
+
+
+
+
+
+
+
+	
+ return new;
+end;

@@ -1,0 +1,23 @@
+MDClientes.qsuma.SQL.Clear;
+        MDClientes.qsuma.SQL.Add('select sum(cantidad) as total   from facturacion.venta_numero_diario');
+        MDClientes.qsuma.SQL.Add(' WHERE codigo_cli='+MDVentas.ClientVentacodigo_cli.AsString+' and  codigo_loteria='+MDVentas.ClientVentacodigo_loterias.AsString);
+        MDClientes.qsuma.SQL.Add(' and tipo_jugada like'+''''+'%'+tipojugada+'%'+'''');
+        MDClientes.qsuma.SQL.Add(' and jugada like'+''''+'%'+(a+b+c)+'%'+'''');
+       MDClientes.qsuma.open;
+
+       DMempresa.TEmpresa.Open;
+       if tipojugada='QUINIELAS' then
+       begin
+          disponible:=DMempresa.TEmpresavalorgeneral_quiniela.Value-MDClientes.Qsumatotal.Value;
+       end;
+        if tipojugada='PALE' then
+       begin
+          disponible:=DMempresa.TEmpresavalorgeneral_pale.Value-MDClientes.Qsumatotal.Value;
+       end;
+
+        if tipojugada='TRIPLETA' then
+       begin
+          disponible:=DMempresa.TEmpresavalorgeneral_tripleta.Value-MDClientes.Qsumatotal.Value;
+       end;
+
+       EDISPONIBLE.Text:=FLOATTOSTR(DISPONIBLE);
