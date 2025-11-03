@@ -18,8 +18,13 @@
     }
 	
  
-	$pgcon= pg_connect("host=localhost port=5432 dbname=bdmuebleria user=postgres password=rch1004 options='--client_encoding=UTF8'")
-	or die("Error de Conexión".pg_last_error());
+	$pgcon = pg_connect(
+    "host=" . getenv('DB_HOST') .
+    " port=5432" .
+    " dbname=" . getenv('DB_NAME') .
+    " user=" . getenv('DB_USER') .
+    " password=" . getenv('DB_PASS')
+) or die("Error de conexión: " . pg_last_error());
 	
 	//Tiempo desde PosgreeeSQL****************************************************************
 			$sql="select current_date as fecha, extract(hour from  current_timestamp) as hora,
