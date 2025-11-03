@@ -26,8 +26,13 @@
 	$monto_a_pagar=0;
 	
      
-	$pgcon= pg_connect("host=localhost port=5432 dbname=bdmuebleria user=postgres password=rch1004")
-	or die("Error de Conexión".pg_last_error());
+	$pgcon = pg_connect(
+    "host=" . getenv('DB_HOST') .
+    " port=5432" .
+    " dbname=" . getenv('DB_NAME') .
+    " user=" . getenv('DB_USER') .
+    " password=" . getenv('DB_PASS')
+) or die("Error de conexión: " . pg_last_error());
 	
 
  
