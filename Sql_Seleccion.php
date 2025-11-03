@@ -23,7 +23,8 @@
     " port=5432" .
     " dbname=" . getenv('DB_NAME') .
     " user=" . getenv('DB_USER') .
-    " password=" . getenv('DB_PASS')
+    " password=" . getenv('DB_PASS') .
+    " sslmode=" . getenv('DB_SSLMODE')
 ) or die("Error de conexión: " . pg_last_error());
 	
 	//Tiempo desde PosgreeeSQL****************************************************************
