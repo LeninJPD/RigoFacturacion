@@ -188,46 +188,15 @@
 	
 					$query3 = pg_query($pgcon, $sql3) or die("Problema al buscar Articulos".pg_last_error());
 					$clave3=0;
-					// $cuadre3 =null;
+					 $cuadre3 =null;
 			       
-
-                   if(pg_num_rows($query3) > 0) {
-                        $cuadre3 = [];
-				   }else {
-				    // No hay resultados, enviamos un registro por defecto con los campos que necesites
-				      $row = [
-					        0 => 'Sin registro',
-					        'concepto' => 'Sin registro',
-					        1 => 0,
-					        'monto' => 0,
-					        2 => date('Y-m-d'),
-					        'fecha' => date('Y-m-d'),
-					        3 => true,
-					        'decaja' => true,
-					        4 => 0,
-					        'codigo_usuario' => 0,
-					        5 => date('H:i:s'),
-					        'hora' => date('H:i:s'),
-					        6 => 0,
-					        'codigo' => 0,
-					        7 => 0,
-					        'codigo_local' => 0,
-					        8 => 0,
-					        'codigo_cuadre' => 0
-					    ];
-					    $cuadre3[0] = $row;
-					}
-			 
 					while ($row = pg_fetch_array($query3))
 					{ 
 						$clave3++;
 						$cuadre3[$clave3]=$row;					 
 					}
 				
-				
-				
-				
-				
+		
 				  $sql="select fecha_venta, 
 				               coalesce(total_venta,0.0::numeric) as total_venta,  
 							   coalesce(efectivo,0.0::numeric) as efectivo,  
@@ -245,24 +214,8 @@
 			  
 			$query = pg_query($pgcon, $sql) or die("Problema al buscar Articulos".pg_last_error());
 			$clave=0;
-			//$cuadre =null;
-			  $cuadre = [];
-
-			 if(pg_num_rows($query) > 0) {
-                     $cuadre = [];
-			 }else{
-				    // No hay resultados, enviamos un registro por defecto con los campos que necesites
-				    $cuadre[] = [
-				        'fecha_venta' => '',
-				        'total_venta' => 0,
-				        'efectivo' => 0,
-				        'credito' => 0,
-				        'tarjeta' => 0,
-				        'cheque' => 0,
-				        'abonos_efectivo' => 0,
-				        'desembolso_efectivo' => 0
-				    ];
-				}
+			$cuadre =null;
+		
 			 
 			while ($row = pg_fetch_array($query))
 			{ 
