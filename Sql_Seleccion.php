@@ -215,7 +215,7 @@
 					        8 => 0,
 					        'codigo_cuadre' => 0
 					    ];
-					    $cuadre3[] = $row;
+					    $cuadre3[0] = $row;
 					}
 			 
 					while ($row = pg_fetch_array($query3))
