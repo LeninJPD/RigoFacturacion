@@ -206,7 +206,7 @@
 							   coalesce(tarjeta,0.0::numeric)as tarjeta,  
 							   coalesce(cheque,0.0::numeric) as cheque,  
 							   coalesce(abonos_efectivo,0.0::numeric) as abonos_efectivo,  
-							   COALESCE(NULLIF(desembolso_efectivo, ''), 0.0::numeric) as desembolso_efectivo
+							   COALESCE(desembolso_efectivo, 0.0) as desembolso_efectivo
 					from 
 					vista_cuadre_general where total_venta>0 ";
 					
