@@ -189,21 +189,23 @@
 					$query3 = pg_query($pgcon, $sql3) or die("Problema al buscar Articulos".pg_last_error());
 					$clave3=0;
 					// $cuadre3 =null;
-			       $cuadre3 = [];
+			       
 
-                   if(pg_num_rows($query3) < 1) {
+                   if(pg_num_rows($query3) > 0) {
+                        $cuadre3 = [];
+				   }else   
 				    // No hay resultados, enviamos un registro por defecto con los campos que necesites
-				      $cuadre3 = (object)[
-						    'concepto' => 'Sin registros',
-						    'monto' => 0,
-						    'fecha' => date('Y-m-d'),
-						    'decaja' => true,
-						    'codigo_usuario' => 0,
-						    'hora' => date('H:i:s'),
-						    'codigo' => 0,
-						    'codigo_local' => 0,
-						    'codigo_cuadre' => 0
-						];
+				      $cuadre3[] = [
+					        'concepto' => 'Sin registro',
+					        'monto' => 0,
+					        'fecha' => date('Y-m-d'),
+					        'decaja' => true,
+					        'codigo_usuario' => 0,
+					        'hora' => date('H:i:s'),
+					        'codigo' => 0,
+					        'codigo_local' => 0,
+					        'codigo_cuadre' => 0
+					    ];
 					}
 			 
 					while ($row = pg_fetch_array($query3))
@@ -236,7 +238,9 @@
 			//$cuadre =null;
 			  $cuadre = [];
 
-			 if(pg_num_rows($query) < 1) {
+			 if(pg_num_rows($query) > 0) {
+                     $cuadre = [];
+			 }else
 				    // No hay resultados, enviamos un registro por defecto con los campos que necesites
 				    $cuadre[] = [
 				        'fecha_venta' => '',
