@@ -188,7 +188,8 @@
 	
 					$query3 = pg_query($pgcon, $sql3) or die("Problema al buscar Articulos".pg_last_error());
 					$clave3=0;
-					$cuadre3 =null;
+					// $cuadre3 =null;
+			       $cuadre3 = [];
 					while ($row = pg_fetch_array($query3))
 					{ 
 						$clave3++;
@@ -216,7 +217,8 @@
 			  
 			$query = pg_query($pgcon, $sql) or die("Problema al buscar Articulos".pg_last_error());
 			$clave=0;
-			$cuadre =null;
+			//$cuadre =null;
+			  $cuadre = [];
 			while ($row = pg_fetch_array($query))
 			{ 
 		    	$clave++;
