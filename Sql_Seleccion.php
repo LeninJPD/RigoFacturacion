@@ -193,7 +193,7 @@
 
                    if(pg_num_rows($query3) > 0) {
                         $cuadre3 = [];
-				   }else   
+				   }else {
 				    // No hay resultados, enviamos un registro por defecto con los campos que necesites
 				      $cuadre3[] = [
 					        'concepto' => 'Sin registro',
@@ -240,7 +240,7 @@
 
 			 if(pg_num_rows($query) > 0) {
                      $cuadre = [];
-			 }else
+			 }else{
 				    // No hay resultados, enviamos un registro por defecto con los campos que necesites
 				    $cuadre[] = [
 				        'fecha_venta' => '',
