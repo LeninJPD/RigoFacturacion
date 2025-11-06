@@ -190,6 +190,22 @@
 					$clave3=0;
 					// $cuadre3 =null;
 			       $cuadre3 = [];
+
+                   if(pg_num_rows($query3) < 1) {
+				    // No hay resultados, enviamos un registro por defecto con los campos que necesites
+				    $cuadre3[] = [
+				        'concepto' => 'Sin registros',
+				        'monto' => 0,
+				        'fecha' => date('yyyy:MM:dd'),         // puedes dejar null o poner la fecha actual
+				        'decaja' => true,
+				        'codigo_usuario' => 0,
+				        'hora' => date('H:i:s'),
+				        'codigo' => 0,
+				        'codigo_local' => 0,
+				        'codigo_cuadre' => 0
+				    ];
+				}
+			 
 					while ($row = pg_fetch_array($query3))
 					{ 
 						$clave3++;
@@ -219,6 +235,21 @@
 			$clave=0;
 			//$cuadre =null;
 			  $cuadre = [];
+
+			 if(pg_num_rows($query) < 1) {
+				    // No hay resultados, enviamos un registro por defecto con los campos que necesites
+				    $cuadre[] = [
+				        'fecha_venta' => '',
+				        'total_venta' => 0,
+				        'efectivo' => 0,
+				        'credito' => 0,
+				        'tarjeta' => 0,
+				        'cheque' => 0,
+				        'abonos_efectivo' => 0,
+				        'desembolso_efectivo' => 0
+				    ];
+				}
+			 
 			while ($row = pg_fetch_array($query))
 			{ 
 		    	$clave++;
