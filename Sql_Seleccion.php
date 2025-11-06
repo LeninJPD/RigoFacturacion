@@ -193,7 +193,7 @@
 
                    if(pg_num_rows($query3) < 1) {
 				    // No hay resultados, enviamos un registro por defecto con los campos que necesites
-				    $cuadre3[] = [
+				    $cuadre3 = [
 				        'concepto' => 'Sin registros',
 				        'monto' => 0,
 				        'fecha' => date('yyyy:MM:dd'),         // puedes dejar null o poner la fecha actual
