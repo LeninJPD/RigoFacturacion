@@ -210,7 +210,7 @@
 					from 
 					vista_cuadre_general where total_venta>0 ";
 					
-				//  $sql=$sql." and fecha_venta BETWEEN '".$fecha."' and '".$fecha2."' ";
+				  $sql=$sql." and fecha_venta BETWEEN '".$fecha."' and '".$fecha2."' ";
 			 
 		
 			  
