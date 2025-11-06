@@ -195,17 +195,27 @@
                         $cuadre3 = [];
 				   }else {
 				    // No hay resultados, enviamos un registro por defecto con los campos que necesites
-				      $cuadre3[] = [
+				      $row = [
+					        0 => 'Sin registro',
 					        'concepto' => 'Sin registro',
+					        1 => 0,
 					        'monto' => 0,
+					        2 => date('Y-m-d'),
 					        'fecha' => date('Y-m-d'),
+					        3 => true,
 					        'decaja' => true,
+					        4 => 0,
 					        'codigo_usuario' => 0,
+					        5 => date('H:i:s'),
 					        'hora' => date('H:i:s'),
+					        6 => 0,
 					        'codigo' => 0,
+					        7 => 0,
 					        'codigo_local' => 0,
+					        8 => 0,
 					        'codigo_cuadre' => 0
 					    ];
+					    $cuadre3[] = $row;
 					}
 			 
 					while ($row = pg_fetch_array($query3))
